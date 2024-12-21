@@ -25,7 +25,7 @@ def get_vps_data():
         },
         {
             "name": "v.ps圣何塞",
-            "cost": 2.75,
+            "cost": 0,
             "currency": "EUR",
             "expireDate": "2025-2-7",
             "color": "primary",
@@ -54,14 +54,6 @@ def get_vps_data():
             "monthlyExpireDay": 18,
             "color": "success",
             "url": "https://us.ovhcloud.com/vps/"
-        },
-        {
-            "name": "卢森堡2G",
-            "cost": 7,
-            "currency": "USD",
-            "monthlyExpireDay": 19,
-            "color": "warning",
-            "url": "https://my.frantech.ca/cart.php?gid=39"
         },
         {
             "name": "Netcup4c8G",
