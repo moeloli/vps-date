@@ -62,6 +62,14 @@ def get_vps_data():
             "monthlyExpireDay": 29,
             "color": "info",
             "url": "https://www.customercontrolpanel.de/index.php?action=se"
+        },
+        {
+            "name": "vmiss伦敦",
+            "cost": 20.3，
+            "currency": "CNY",
+            "expireDate": "2025-01-22",
+            "color": "info",
+            "url": "https://app.vmiss.com/store/gb-london-9929"
         }
     ]
     
