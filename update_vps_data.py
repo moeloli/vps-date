@@ -65,7 +65,7 @@ def get_vps_data():
         },
         {
             "name": "vmiss伦敦",
-            "cost": 20.3，
+            "cost": 20.3,
             "currency": "CNY",
             "expireDate": "2025-01-22",
             "color": "info",
