@@ -35,7 +35,7 @@ def get_vps_data():
             "name": "OVH加拿大0.97",
             "cost": 0.97,
             "currency": "USD",
-            "expireDate": "2025-2-9",
+            "expireDate": "2025-5-9",
             "color": "danger",
             "url": "https://ca.ovh.com/manager/#/hub"
         },
