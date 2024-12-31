@@ -40,6 +40,22 @@ def get_vps_data():
             "url": "https://ca.ovh.com/manager/#/hub"
         },
         {
+            "name": "OVH美西",
+            "cost": 2.52,
+            "currency": "USD",
+            "expireDate": "2025-3-28",
+            "color": "info",
+            "url": "https://us.ovhcloud.com/manager/#/hub"
+        },
+        {
+            "name": "nc-nano G11s",
+            "cost": 1.68,
+            "currency": "EUR",
+            "expireDate": "2025-6-28",
+            "color": "info",
+            "url": "https://www.customercontrolpanel.de/produkte.php"
+        },
+        {
             "name": "raksmart-hk",
             "cost": 0,
             "currency": "USD",
