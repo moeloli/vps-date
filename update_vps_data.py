@@ -45,7 +45,7 @@ def get_vps_data():
             "currency": "USD",
             "expireDate": "2025-3-28",
             "color": "info",
-            "url": "https://us.ovhcloud.com/manager/#/hub"
+            "url": "https://us.ovhcloud.com/vps/"
         },
         {
             "name": "nc-nano G11s",
@@ -62,14 +62,6 @@ def get_vps_data():
             "expireDate": "2025-11-9",
             "color": "success",
             "url": "https://billing.raksmart.com/whmcs/clientarea.php?action=products"
-        },
-        {
-            "name": "OVH美西",
-            "cost": 5.5,
-            "currency": "EUR",
-            "monthlyExpireDay": 18,
-            "color": "success",
-            "url": "https://us.ovhcloud.com/vps/"
         },
         {
             "name": "Netcup4c8G",
