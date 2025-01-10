@@ -41,29 +41,38 @@ class NotificationManager:
         print("Telegram配置已保存！")
 
     def send_telegram(self, message):
-        if not self.config['telegram']['enabled']:
-            return False, "Telegram通知未启用"
-        
+        """发送Telegram通知"""
         try:
+            if not self.config['telegram']['enabled']:
+                return
+                
             bot_token = self.config['telegram']['bot_token']
             chat_id = self.config['telegram']['chat_id']
-            url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
             
+            # 添加详情链接到消息末尾
+            base_url = self.config.get('web_dashboard_url', 'http://your-dashboard-url')
+            message += f"\n\n👉 查看详情：{base_url}"
+            
+            # 发送消息到Telegram
+            url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
             data = {
                 "chat_id": chat_id,
                 "text": message,
-                "parse_mode": "Markdown"  # 改为支持Markdown格式
+                "parse_mode": "HTML"
             }
+            
             response = requests.post(url, json=data)
-            return True, "Telegram通知发送成功"
+            response.raise_for_status()
+            
         except Exception as e:
-            return False, f"Telegram错误: {str(e)}"
+            print(f"发送Telegram通知失败: {str(e)}")
 
 class VPSManager:
     def __init__(self):
         self.vps_file = 'index.html'
         self.vps_data = self.load_vps_data()
         self.currencies = ['USD', 'EUR', 'CNY', 'CAD']
+        self.exchange_rates = {}  # 添加汇率存储
         self.notification = NotificationManager()
 
     def load_vps_data(self):
@@ -341,6 +350,51 @@ class VPSManager:
         if self.notification.config['telegram']['enabled']:
             self.notification.send_telegram(message)
 
+    def update_exchange_rates(self):
+        """更新汇率信息"""
+        try:
+            print("\n正在更新汇率...")
+            # 使用免费的汇率API
+            base_currency = 'USD'  # 使用美元作为基准货币
+            api_url = f"https://api.exchangerate-api.com/v4/latest/{base_currency}"
+            
+            response = requests.get(api_url)
+            response.raise_for_status()
+            data = response.json()
+            
+            # 更新汇率数据
+            self.exchange_rates = {
+                'USD': data['rates']['CNY'],  # 转换为人民币汇率
+                'EUR': data['rates']['CNY'] / data['rates']['EUR'],
+                'CNY': 1.0,  # 基准货币
+                'CAD': data['rates']['CNY'] / data['rates']['CAD']
+            }
+            
+            # 保存汇率到JS文件
+            js_content = f"""const exchangeRates = {json.dumps(self.exchange_rates, indent=4)};"""
+            with open('exchange_rates.js', 'w', encoding='utf-8') as f:
+                f.write(js_content)
+            
+            # 显示更新后的汇率
+            print("\n当前汇率（相对于CNY）：")
+            for currency, rate in self.exchange_rates.items():
+                print(f"{currency}: {rate:.4f}")
+            
+            # 发送通知
+            message = "💱 汇率更新通知\n\n"
+            message += "当前汇率（相对于CNY）：\n"
+            for currency, rate in self.exchange_rates.items():
+                message += f"{currency}: {rate:.4f}\n"
+            self.send_notification(message)
+            
+            print("\n汇率更新成功！")
+            return True
+            
+        except Exception as e:
+            error_msg = f"更新汇率失败: {str(e)}"
+            print(error_msg)
+            return False
+
     def show_menu(self):
         while True:
             os.system('cls' if os.name == 'nt' else 'clear')
@@ -351,7 +405,9 @@ class VPSManager:
             print("4. 修改VPS")
             print("5. 推送到GitHub")
             print("6. 通知设置")
+            print("7. 更新汇率")
             print("0. 退出")
+            print("=" * 20)
             
             choice = input("\n请选择操作: ").strip()
             
@@ -367,6 +423,8 @@ class VPSManager:
                 self.push_to_github()
             elif choice == '6':
                 self.notification_menu()
+            elif choice == '7':
+                self.update_exchange_rates()
             elif choice == '0':
                 break
             else:

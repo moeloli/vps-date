@@ -157,6 +157,7 @@
 </head>
 <body>
     <div class="container">
+        <script src="exchange_rates.js"></script>
         <h1 class="page-title">VPS到期监控</h1>
         <!-- 状态统计面板 -->
         <div class="stats-container">
@@ -191,14 +192,6 @@
         console.log('脚本开始执行');
         
         const vpsServices = [
-    {
-        "name": "斯巴达VPS",
-        "cost": 8,
-        "currency": "USD",
-        "expireDate": "2025-1-15",
-        "color": "primary",
-        "url": "https://billing.spartanhost.net/login"
-    },
     {
         "name": "阿里云轻量香港",
         "cost": 34,
@@ -266,25 +259,17 @@
     {
         "name": "vmiss-london",
         "cost": 4.0,
-        "currency": "CNY",
+        "currency": "CAD",
         "expireDate": "2025-01-22",
         "color": "info",
         "url": "https://app.vmiss.com/store/gb-london-9929"
     },
     {
-        "name": "测试001",
-        "cost": 9.0,
-        "currency": "EUR",
-        "color": "danger",
-        "url": "https://1234.com",
-        "expireDate": "2025-1-13"
-    },
-    {
-        "name": "test002",
-        "cost": 5.0,
+        "name": "斯巴达VPS",
+        "cost": 8.0,
         "currency": "USD",
-        "url": "1234.com",
-        "monthlyExpireDay": 12
+        "url": "https://billing.spartanhost.net/login",
+        "monthlyExpireDay": 15
     }
 ];
         
@@ -298,20 +283,15 @@
             });
         }
 
-        const exchangeRates = {
-            "USD": 7.25,
-            "EUR": 7.66,
-            "CNY": 1,
-            "CAD": 5.35
-        };
-
         function calculateDaysUntilExpire(service) {
             try {
                 const today = new Date();
+                today.setHours(0, 0, 0, 0);  // 设置时间为当天0点
                 let expireDate;
                 
                 if (service.expireDate) {
                     expireDate = new Date(service.expireDate);
+                    expireDate.setHours(0, 0, 0, 0);  // 设置到期时间为当天0点
                 } else if (service.monthlyExpireDay) {
                     expireDate = new Date(today.getFullYear(), today.getMonth(), service.monthlyExpireDay);
                     if (today.getDate() > service.monthlyExpireDay) {
