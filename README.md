@@ -2,7 +2,7 @@
 
 一个优雅的 VPS 到期日期监控工具，再也不用担心 VPS 续费超期了！通过 Telegram 机器人推送到期提醒，让您轻松管理多台服务器。
 
-
+演示：https://woniu336.github.io/vps-date/
 
 ## ✨ 特色功能
 
@@ -28,12 +28,16 @@ run_manager.bat
 
 后续不影响使用
 
-
+⚠️ 前端可点击`index.html`查看，脚本集成了一键推送到Giuhub
 
 有两个地方需要手动修改，
 
 - 修改`vps_manager.py `第53行，修改成你的监控地址，作用是仅在tg通知底部展示
 - 把`config.example.json`重命名为`config.json`，目的是测试通知，注意只有即将到期才会触发通知
+
+
+
+
 
 ### 3. 通知部署
 
