@@ -1,104 +1,56 @@
-## 演示
+### VPS 到期监控助手 🚀
+
+一个优雅的 VPS 到期日期监控工具，再也不用担心 VPS 续费超期了！通过 Telegram 机器人实时推送到期提醒，让您轻松管理多台服务器。
 
 
-```
-https://woniu336.github.io/vps-date/
-```
 
-- 北京时间每天8点和晚上8点自动更新
-- 首次使用，可以手动触发运行测试
+## ✨ 特色功能
 
-
-## 添加监控
-
-拷贝仓库，修改 update_vps_data.py
-
-添加小鸡信息，例如：
-
-```
-        {
-            "name": "OVH加拿大",
-            "cost": 0.97,
-            "currency": "USD",
-            "expireDate": "2025-2-9",
-            "color": "danger",
-            "url": "https://ca.ovh.com/manager/#/hub"
-        },
-```
-
-- cost 是费用
-- currency 是币种，USD、EUR、CNY 三种币种
-- expireDate 到期时间
-- monthlyExpireDay 每月续费的日期，例如：3，就是每月3号续费，注意：expireDate和monthlyExpireDay只能二选一
-- color 颜色
-- url 链接
-
-## 手动触发运行
-
-图1：
-
-![Image](https://img.meituan.net/video/a1dd1235b55426848b809904ca47fcd1136540.png)
-
-图2：
-
-![Image](https://img.meituan.net/video/bfaac2b0278fc258c8b9adbe6a9339b965243.png)
-
-
-## 开启GitHub Pages
-
-
-![Image](https://img.meituan.net/video/41151f0258dcd0e8dde99c9538fe0e8184301.png)
+- 🤖 支持 Telegram 机器人通知（3天内到期触发通知）
+- ⏰ 自动定时检查（每天早8点和晚8点）
+- 📊 支持批量管理多台服务器
+- 🔔 灵活的提醒时间配置，按固定日期还是每月循环
+- 💻 支持 GitHub Actions 自动运行
 
 
 
 
-## 通知
 
-> 本项目没有整合通知，需要下载 vps_monitor.py 脚本到机子上运行
-> 记得把小鸡ip加入到钉钉ip段
+## 🚀 快速开始
 
-![Image](https://img.meituan.net/video/b873c041a39d51ba8a26632bfaebde6722621.png)
-
-通知测试
-
-![Image](https://img.meituan.net/video/38ec1feedfcfae28dc36cc3251820ff817647.png)
-
-
-1. 安装依赖
+下载项目到本地，双击运行
 
 ```
-pip install requests
+run_manager.bat
 ```
 
-修改脚本，添加钉钉通知
+有两个地方需要手动修改，
+
+- 修改`vps_manager.py `第53行，修改成你的监控地址，作用是仅在tg通知底部展示
+- 把`config.example.json`重命名为`config.json`，目的是测试通知，注意只有即将到期才会触发通知
+
+### 3. 通知部署
+
+1. Fork 本仓库
+2. 在仓库设置中添加以下 Secrets：
+   - `TELEGRAM_BOT_TOKEN`: 您的 Telegram 机器人 token
+   - `TELEGRAM_CHAT_ID`: 您的 Telegram 聊天 ID
+3. Actions 会自动在每天早8点和晚8点（北京时间）运行检查
+
+## 📝 使用说明
+
+- 运行 `run_manager.bat` 管理您的 VPS 信息
+- 运行 `check_expiry.bat`（Windows）快速检查到期状态
+- 查看 `vps_monitor.log` 了解运行日志
+- 通过 `index.html` 可视化查看 VPS 状态
 
 
-2. 测试
 
-```
-python3 vps_monitor.py
-```
+## 📜 开源协议
 
+本项目采用 MIT 协议开源，欢迎自由使用。
 
-3. 后台运行
+## ⭐ 支持项目
 
-```
-nohup python3 vps_monitor.py > vps_monitor.out 2>&1 &
-```
-
-
-
-4. 停止监控
-
-```
-ps aux | grep vps_monitor.py
-```
-
-停止进程
-
-```
-kill <进程ID>
-```
-
-
+如果这个项目对您有帮助，请给它一个 Star！这是对我们最好的鼓励。
 
