@@ -1,10 +1,5 @@
 import json
 import os
-import time
-import hmac
-import hashlib
-import base64
-import urllib.parse
 import logging
 from datetime import datetime
 import requests
@@ -16,49 +11,6 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s',
     filename='vps_monitor.log'
 )
-
-def sign_dingtalk_webhook(webhook, secret):
-    """为钉钉消息签名"""
-    timestamp = str(round(time.time() * 1000))
-    secret_enc = secret.encode('utf-8')
-    string_to_sign = '{}\n{}'.format(timestamp, secret)
-    string_to_sign_enc = string_to_sign.encode('utf-8')
-    hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
-    sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
-    return f"{webhook}&timestamp={timestamp}&sign={sign}"
-
-def send_dingtalk_message(webhook, secret, message):
-    """发送钉钉消息"""
-    try:
-        headers = {'Content-Type': 'application/json; charset=utf-8'}
-        webhook_url = sign_dingtalk_webhook(webhook, secret)
-        
-        data = {
-            "msgtype": "markdown",
-            "markdown": {
-                "title": "VPS到期提醒",
-                "text": message
-            }
-        }
-        
-        response = requests.post(
-            webhook_url, 
-            headers=headers, 
-            data=json.dumps(data, ensure_ascii=False).encode('utf-8')
-        )
-        
-        if response.status_code == 200:
-            logging.info("钉钉通知发送成功")
-            return True, "钉钉通知发送成功"
-        else:
-            error_msg = f"钉钉通知发送失败: {response.text}"
-            logging.error(error_msg)
-            return False, error_msg
-            
-    except Exception as e:
-        error_msg = f"钉钉通知发送错误: {str(e)}"
-        logging.error(error_msg)
-        return False, error_msg
 
 def check_vps_expiry():
     """检查VPS到期情况并发送通知"""
@@ -92,7 +44,7 @@ def check_vps_expiry():
 
         # 如果有即将到期的VPS，发送通知
         if expiring_vps or monthly_vps:
-            message = "# ⚠️ VPS到期提醒\n"
+            message = "⚠️ VPS到期提醒\n"
             
             if expiring_vps:
                 message += "\n" + "\n".join(expiring_vps)
@@ -102,17 +54,11 @@ def check_vps_expiry():
                     message += "\n"
                 message += "\n" + "\n".join(monthly_vps)
             
-            # 发送通知
-            if manager.notification.config['dingtalk']['enabled']:
-                webhook = manager.notification.config['dingtalk']['webhook']
-                secret = manager.notification.config['dingtalk']['secret']
-                send_dingtalk_message(webhook, secret, message)
-            
+            # 发送Telegram通知
             if manager.notification.config['telegram']['enabled']:
                 manager.notification.send_telegram(message)
-            
-            print("已发送到期提醒通知")
-            logging.info("已发送到期提醒通知")
+                print("已发送到期提醒通知")
+                logging.info("已发送到期提醒通知")
         else:
             print("没有即将到期的VPS")
             logging.info("没有即将到期的VPS")

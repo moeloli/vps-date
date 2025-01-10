@@ -16,7 +16,6 @@ class NotificationManager:
     def load_config(self):
         if not os.path.exists(self.config_file):
             default_config = {
-                "dingtalk": {"enabled": False, "webhook": "", "secret": ""},
                 "telegram": {"enabled": False, "bot_token": "", "chat_id": ""}
             }
             with open(self.config_file, 'w') as f:
@@ -30,73 +29,20 @@ class NotificationManager:
         with open(self.config_file, 'w') as f:
             json.dump(self.config, f, indent=4)
 
-    def setup_dingtalk(self):
-        print("\n=== DingTalk Config ===")
-        enabled = input("Enable DingTalk? (y/n): ").lower() == 'y'
-        self.config['dingtalk']['enabled'] = enabled
-        
-        if enabled:
-            self.config['dingtalk']['webhook'] = input("Webhook URL: ")
-            self.config['dingtalk']['secret'] = input("Secret Key: ")
-        self.save_config()
-        print("DingTalk config saved!")
-
     def setup_telegram(self):
-        print("\n=== Telegram Config ===")
-        enabled = input("Enable Telegram? (y/n): ").lower() == 'y'
+        print("\n=== Telegram配置 ===")
+        enabled = input("启用Telegram通知? (y/n): ").lower() == 'y'
         self.config['telegram']['enabled'] = enabled
         
         if enabled:
             self.config['telegram']['bot_token'] = input("Bot Token: ")
             self.config['telegram']['chat_id'] = input("Chat ID: ")
         self.save_config()
-        print("Telegram config saved!")
-
-    def send_dingtalk(self, message):
-        """发送钉钉通知"""
-        if not self.config['dingtalk']['enabled']:
-            return False, "钉钉通知未启用"
-        
-        try:
-            webhook = self.config['dingtalk']['webhook']
-            secret = self.config['dingtalk']['secret']
-            
-            headers = {'Content-Type': 'application/json; charset=utf-8'}
-            webhook_url = self.sign_dingtalk_webhook(webhook, secret)
-            
-            data = {
-                "msgtype": "markdown",
-                "markdown": {
-                    "title": "VPS到期提醒",
-                    "text": message
-                }
-            }
-            
-            response = requests.post(
-                webhook_url, 
-                headers=headers, 
-                data=json.dumps(data, ensure_ascii=False).encode('utf-8')
-            )
-            
-            if response.status_code == 200:
-                return True, "钉钉通知发送成功"
-            return False, f"钉钉通知发送失败: {response.text}"
-        except Exception as e:
-            return False, f"钉钉通知发送错误: {str(e)}"
-
-    def sign_dingtalk_webhook(self, webhook, secret):
-        """为钉钉消息签名"""
-        timestamp = str(round(time.time() * 1000))
-        secret_enc = secret.encode('utf-8')
-        string_to_sign = '{}\n{}'.format(timestamp, secret)
-        string_to_sign_enc = string_to_sign.encode('utf-8')
-        hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
-        sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
-        return f"{webhook}&timestamp={timestamp}&sign={sign}"
+        print("Telegram配置已保存！")
 
     def send_telegram(self, message):
         if not self.config['telegram']['enabled']:
-            return False, "Telegram not enabled"
+            return False, "Telegram通知未启用"
         
         try:
             bot_token = self.config['telegram']['bot_token']
@@ -106,12 +52,12 @@ class NotificationManager:
             data = {
                 "chat_id": chat_id,
                 "text": message,
-                "parse_mode": "HTML"
+                "parse_mode": "Markdown"  # 改为支持Markdown格式
             }
             response = requests.post(url, json=data)
-            return True, "Telegram notification sent"
+            return True, "Telegram通知发送成功"
         except Exception as e:
-            return False, f"Telegram error: {str(e)}"
+            return False, f"Telegram错误: {str(e)}"
 
 class VPSManager:
     def __init__(self):
@@ -344,18 +290,15 @@ class VPSManager:
     def notification_menu(self):
         while True:
             print("\n=== 通知设置 ===")
-            print("1. 配置钉钉通知")
-            print("2. 配置Telegram通知")
-            print("3. 发送测试通知")
+            print("1. 配置Telegram通知")
+            print("2. 发送测试通知")
             print("0. 返回主菜单")
             
             choice = input("\n请选择操作: ")
             
             if choice == '1':
-                self.notification.setup_dingtalk()
-            elif choice == '2':
                 self.notification.setup_telegram()
-            elif choice == '3':
+            elif choice == '2':
                 self.send_test_notification()
             elif choice == '0':
                 break
@@ -368,10 +311,6 @@ class VPSManager:
         message += f"监控服务器数量: {len(self.vps_data)} 台"
         
         results = []
-        if self.notification.config['dingtalk']['enabled']:
-            success, msg = self.notification.send_dingtalk(message)
-            results.append(f"钉钉: {msg}")
-        
         if self.notification.config['telegram']['enabled']:
             success, msg = self.notification.send_telegram(message)
             results.append(f"Telegram: {msg}")
@@ -399,8 +338,6 @@ class VPSManager:
 
     def send_notification(self, message):
         """统一的通知发送函数"""
-        if self.notification.config['dingtalk']['enabled']:
-            self.notification.send_dingtalk(message)
         if self.notification.config['telegram']['enabled']:
             self.notification.send_telegram(message)
 

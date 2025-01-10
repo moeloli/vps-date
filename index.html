@@ -3,98 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VPS监控面板</title>
+    <title>VPS到期监控</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 使用霞鹜文楷屏幕阅读体 -->
+    <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont@1.7.0/lxgwwenkaiscreen.css">
     <style>
         body {
-            background-color: #f5f5f5;
-            color: #333;
+            background-color: #f5f8ff;
+            color: #445577;
+            font-family: "LXGW WenKai Screen", sans-serif;  /* 使用霞鹜文楷 */
+            background-image: url('https://api.yimian.xyz/img?type=moe&size=1920x1080');
+            background-attachment: fixed;
+            background-size: cover;
         }
+        
         .container {
             max-width: 1200px;
             padding-top: 20px;
         }
+        
         .stats-container {
-            background: #fff;
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
             padding: 20px;
             margin-bottom: 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 15px rgba(68, 85, 119, 0.1);
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(100, 149, 237, 0.3);
         }
+        
         .card {
-            background: #fff;
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(100, 149, 237, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             margin-bottom: 20px;
             transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
         }
+        
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: rgba(100, 149, 237, 0.8);
         }
+        
         .card-header {
-            background: #2c3e50;
+            background: linear-gradient(45deg, #6495ed, #4682b4);
             color: white;
-            border-radius: 10px 10px 0 0 !important;
+            border-radius: 18px 18px 0 0 !important;
             padding: 15px 20px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
-        .card-body {
-            padding: 20px;
-        }
+        
         .status-badge {
-            padding: 5px 10px;
-            border-radius: 15px;
+            padding: 8px 15px;
+            border-radius: 20px;
             font-size: 0.9rem;
-            font-weight: 500;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(68, 85, 119, 0.1);
         }
+        
         .status-normal {
-            background: #27ae60;
+            background: linear-gradient(45deg, #87ceeb, #5f9ea0);
             color: white;
         }
+        
         .status-warning {
-            background: #f39c12;
+            background: linear-gradient(45deg, #deb887, #d2b48c);
             color: white;
         }
+        
         .status-danger {
-            background: #e74c3c;
+            background: linear-gradient(45deg, #cd5c5c, #bc8f8f);
             color: white;
         }
+        
         .stats-item {
             text-align: center;
             padding: 15px;
+            position: relative;
         }
+        
         .stats-item h3 {
-            font-size: 1.1rem;
-            color: #7f8c8d;
+            font-size: 1.2rem;
+            color: #445577;
             margin-bottom: 10px;
-        }
-        .stats-item p {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: #2c3e50;
-            margin: 0;
-        }
-        .expire-countdown {
             font-weight: bold;
-            font-size: 1.1rem;
         }
+        
+        .stats-item p {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #4682b4;
+            margin: 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
         .direct-link {
-            color: #fff;
+            color: white;
             text-decoration: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 15px;
+            background: rgba(100, 149, 237, 0.25);
             transition: all 0.3s ease;
+            border: 1px solid rgba(100, 149, 237, 0.3);
         }
+        
         .direct-link:hover {
-            background: rgba(255,255,255,0.3);
-            color: #fff;
+            background: rgba(100, 149, 237, 0.4);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        /* 添加可爱的动画效果 */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .card {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.5);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #6495ed, #4682b4);
+            border-radius: 5px;
+        }
+        
+        /* 添加页面标题样式 */
+        .page-title {
+            text-align: center;
+            color: #4682b4;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            font-weight: bold;
+            font-family: "LXGW WenKai Screen", sans-serif;  /* 确保标题也使用霞鹜文楷 */
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <h1 class="page-title">VPS到期监控</h1>
         <!-- 状态统计面板 -->
         <div class="stats-container">
             <div class="row">
