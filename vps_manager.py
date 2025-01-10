@@ -398,7 +398,8 @@ class VPSManager:
     def show_menu(self):
         while True:
             os.system('cls' if os.name == 'nt' else 'clear')
-            print("\n=== VPS管理系统 ===")
+            print("\n=== VPS到期监控 ===")
+            print()
             print("1. 查看VPS列表")
             print("2. 添加VPS")
             print("3. 删除VPS")
@@ -407,6 +408,7 @@ class VPSManager:
             print("6. 通知设置")
             print("7. 更新汇率")
             print("0. 退出")
+            print()
             print("=" * 20)
             
             choice = input("\n请选择操作: ").strip()
