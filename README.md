@@ -1,8 +1,12 @@
 ### VPS 到期监控助手 🚀
 
-一个优雅的 VPS 到期日期监控工具，再也不用担心 VPS 续费超期了！通过 Telegram 机器人推送到期提醒，让您轻松管理多台服务器。
+一个优雅的 VPS 到期日期监控工具，再也不用担心 VPS 续费超期了！通过 Telegram 机器人推送到期提醒，轻松管理多台服务器。
+
+之前发过帖子，功能上还不太行，这次重新打造
 
 演示：https://woniu336.github.io/vps-date/
+
+项目： https://github.com/woniu336/vps-date
 
 ## ✨ 特色功能
 
