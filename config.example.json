@@ -1,0 +1,12 @@
+{
+    "dingtalk": {
+        "enabled": false,
+        "webhook": "your_dingtalk_webhook_url",
+        "secret": "your_dingtalk_secret"
+    },
+    "telegram": {
+        "enabled": false,
+        "bot_token": "your_telegram_bot_token",
+        "chat_id": "your_telegram_chat_id"
+    }
+} 
