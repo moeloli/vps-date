@@ -25,7 +25,7 @@ def get_vps_data():
         },
         {
             "name": "claw-jp-7刀",
-            "cost": 4.3，
+            "cost": 4.3,
             "currency": "CNY",
             "expireDate": "2026-01-09",
             "color": "danger",
